@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "embla-carousel-react": "^8.6.0",
+    "react-compare-slider": "^4.0.0"
+  }
+}
