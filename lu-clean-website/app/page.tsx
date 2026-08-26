@@ -14,8 +14,8 @@ const comparacoesData = [
   },
   {
     id: 2,
-    antes: "https://images.unsplash.com/photo-1593696140826-c58b021acf8b?auto=format&fit=crop&w=800",
-    depois: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=800",
+    antes: "/cozinha-antes.png",
+    depois: "/cozinha-depois.png",
     titulo: "Cozinha Pesada"
   },
   {
@@ -186,8 +186,19 @@ export default function Home() {
                     
                     {isMounted ? (
                       <ReactCompareSlider
-                        itemOne={<ReactCompareSliderImage src={item.antes} alt="Antes" />}
-                        itemTwo={<ReactCompareSliderImage src={item.depois} alt="Depois" />}
+                        itemOne={
+    <ReactCompareSliderImage 
+      src={item.depois} 
+      alt="Antes" 
+      style={{ filter: "sepia(50%) brightness(60%) contrast(110%) grayscale(30%) blur(0.5px)" }} 
+    />
+  }
+  // Aqui é a mesma imagem, mas sem filtro, mostrando o resultado real e brilhante
+  itemTwo={
+    <ReactCompareSliderImage 
+      src={item.depois} 
+      alt="Depois" 
+    />}
                         position={50}
                         className="h-full w-full pointer-events-auto"
                         handle={
