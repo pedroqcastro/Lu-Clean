@@ -1,27 +1,23 @@
 "use client";
 
-import { useState, useCallback, useEffect } from 'react';
-import { ReactCompareSlider, ReactCompareSliderImage } from 'react-compare-slider';
+import { useState, useCallback } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 
 // --- DADOS PARA OS CARROSSÉIS ---
 const comparacoesData = [
   {
     id: 1,
-    antes: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=800",
-    depois: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800",
+    imagem: "/sala-pos-obra.jpg",
     titulo: "Sala Pós-Obra"
   },
   {
     id: 2,
-    antes: "/cozinha-antes.png",
-    depois: "/cozinha-depois.png",
+    imagem: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800",
     titulo: "Cozinha Pesada"
   },
   {
     id: 3,
-    antes: "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=800",
-    depois: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=800",
+    imagem: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800",
     titulo: "Quarto e Janelas"
   }
 ];
@@ -35,12 +31,6 @@ const avaliacoesData = [
 ];
 
 export default function Home() {
-  const [isMounted, setIsMounted] = useState(false);
-  
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
   // --- ESTADOS DO SIMULADOR ---
   const [quartos, setQuartos] = useState(1);
   const [banheiros, setBanheiros] = useState(1);
@@ -105,7 +95,7 @@ export default function Home() {
   const Seta = ({ direcao, onClick }: { direcao: 'esq' | 'dir', onClick: () => void }) => (
     <button 
       onClick={onClick}
-      className="absolute top-1/2 -translate-y-1/2 z-10 bg-white/90 backdrop-blur text-blue-600 p-3 rounded-full shadow-lg border border-zinc-200 hover:bg-blue-600 hover:text-white transition-colors hover:scale-110 active:scale-95"
+      className="absolute top-1/2 -translate-y-1/2 z-10 bg-white/90 backdrop-blur text-[#0F4C5C] p-3 rounded-full shadow-lg border border-zinc-200 hover:bg-[#0F4C5C] hover:text-white transition-colors hover:scale-110 active:scale-95"
       style={{ [direcao === 'esq' ? 'left' : 'right']: '1rem' }}
     >
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-6 h-6">
@@ -124,15 +114,19 @@ export default function Home() {
       {/* HEADER */}
       <header className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md z-50 border-b border-zinc-200 shadow-sm">
         <div className="flex items-center justify-between p-4 md:p-6 max-w-7xl mx-auto w-full">
-            <div className="text-xl md:text-2xl font-black tracking-tighter text-blue-600">
-              LU CLEAN
-            </div>
+            <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="flex items-center hover:opacity-80 transition-opacity">
+              <img 
+                src="/logo.png" 
+                alt="Logo LU CLEAN" 
+                className="h-18 md:h-24 w-auto drop-shadow-sm rounded-full"
+              />
+            </a>
             <nav className="hidden md:flex gap-6 text-sm font-medium text-zinc-600">
-              <a href="#resultados" onClick={handleScroll} className="hover:text-blue-600 transition-colors">Resultados</a>
-              <a href="#avaliacoes" onClick={handleScroll} className="hover:text-blue-600 transition-colors">Avaliações</a>
-              <a href="#simulador" onClick={handleScroll} className="hover:text-blue-600 transition-colors">Simulador</a>
+              <a href="#resultados" onClick={handleScroll} className="hover:text-[#0F4C5C] transition-colors">Resultados</a>
+              <a href="#avaliacoes" onClick={handleScroll} className="hover:text-[#0F4C5C] transition-colors">Avaliações</a>
+              <a href="#simulador" onClick={handleScroll} className="hover:text-[#0F4C5C] transition-colors">Simulador</a>
             </nav>
-            <a href={linkWhatsApp} target="_blank" rel="noopener noreferrer" className="bg-blue-600 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-full text-xs md:text-sm font-semibold hover:bg-blue-700 transition-colors shadow-md">
+            <a href={linkWhatsApp} target="_blank" rel="noopener noreferrer" className="bg-[#0F4C5C] text-white px-4 py-2 md:px-5 md:py-2.5 rounded-full text-xs md:text-sm font-semibold hover:bg-[#0F4C5C] transition-colors shadow-md">
               Falar no WhatsApp
             </a>
         </div>
@@ -150,7 +144,7 @@ export default function Home() {
         </div>
 
         <div className="relative z-10 px-6 max-w-4xl mx-auto flex flex-col items-center">
-          <span className="bg-white text-blue-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide mb-6 shadow-sm border border-blue-100">
+          <span className="bg-white text-[#0F4C5C] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide mb-6 shadow-sm border border-blue-100">
             Atendimento em Brasília e Entorno
           </span>
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-zinc-900 mb-6 leading-tight drop-shadow-sm">
@@ -160,18 +154,18 @@ export default function Home() {
             Especialistas em limpeza residencial, comercial e pós-obra. Deslize para ver nossos resultados e simule seu orçamento online.
           </p>
           
-          <a href="#simulador" onClick={handleScroll} className="bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-bold hover:bg-blue-700 transition-all shadow-lg hover:shadow-blue-600/30">
+          <a href="#simulador" onClick={handleScroll} className="bg-[#0F4C5C] text-white px-8 py-4 rounded-full text-lg font-bold hover:bg-[#0F4C5C] transition-all shadow-lg hover:shadow-[#0F4C5C]/30">
             Simular Orçamento
           </a>
         </div>
       </main>
 
-      {/* RESULTADOS (ANTES E DEPOIS - CARROSSEL) */}
+      {/* RESULTADOS (CARROSSEL DE IMAGENS SIMPLES) */}
       <section id="resultados" className="bg-white py-24 w-full scroll-mt-24 border-y border-zinc-100 overflow-hidden relative">
         <div className="max-w-7xl mx-auto px-6 mb-12 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold text-zinc-900 mb-4">Resultados que Impressionam</h2>
           <p className="text-lg text-zinc-600 max-w-2xl mx-auto">
-            Arraste a barra para comparar o Antes e Depois. Deslize para o lado para ver mais projetos concluídos.
+            Deslize para o lado para ver a qualidade dos nossos projetos concluídos.
           </p>
         </div>
 
@@ -182,42 +176,15 @@ export default function Home() {
             <div className="flex touch-pan-y">
               {comparacoesData.map((item) => (
                 <div key={item.id} className="flex-[0_0_90%] md:flex-[0_0_70%] min-w-0 px-3 md:px-4">
-                  <div className="w-full aspect-[4/3] md:aspect-[16/9] rounded-3xl overflow-hidden shadow-xl border-4 border-white ring-1 ring-zinc-200 relative">
+                  <div className="w-full aspect-[4/3] md:aspect-[16/9] rounded-3xl overflow-hidden shadow-xl border-4 border-white ring-1 ring-zinc-200 relative group">
                     
-                    {isMounted ? (
-                      <ReactCompareSlider
-                        itemOne={
-    <ReactCompareSliderImage 
-      src={item.depois} 
-      alt="Antes" 
-      style={{ filter: "sepia(50%) brightness(60%) contrast(110%) grayscale(30%) blur(0.5px)" }} 
-    />
-  }
-  // Aqui é a mesma imagem, mas sem filtro, mostrando o resultado real e brilhante
-  itemTwo={
-    <ReactCompareSliderImage 
-      src={item.depois} 
-      alt="Depois" 
-    />}
-                        position={50}
-                        className="h-full w-full pointer-events-auto"
-                        handle={
-                          <div className="h-full w-1 bg-white relative flex items-center justify-center shadow-lg">
-                            <div className="w-10 h-10 bg-white rounded-full shadow-xl border border-zinc-200 flex items-center justify-center text-blue-600 absolute">
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-6 h-6 rotate-90">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
-                              </svg>
-                            </div>
-                          </div>
-                        }
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-zinc-200 animate-pulse flex items-center justify-center">
-                        <span className="text-zinc-400 font-medium">Carregando imagem...</span>
-                      </div>
-                    )}
+                    <img 
+                      src={item.imagem} 
+                      alt={item.titulo} 
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
 
-                    <div className="absolute top-4 left-4 z-20 pointer-events-none bg-white/90 backdrop-blur px-4 py-1.5 text-xs font-bold rounded-full text-zinc-900 shadow-md">
+                    <div className="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur px-4 py-1.5 text-xs font-bold rounded-full text-zinc-900 shadow-md">
                       {item.titulo}
                     </div>
                   </div>
@@ -246,7 +213,7 @@ export default function Home() {
                 <div key={av.id} className="flex-[0_0_85%] md:flex-[0_0_40%] lg:flex-[0_0_30%] min-w-0 px-3">
                   <div className="bg-white h-full p-8 rounded-3xl shadow-sm border border-zinc-100 flex flex-col gap-6 hover:shadow-md transition-shadow">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-bold text-lg shrink-0">
+                      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-[#0F4C5C] font-bold text-lg shrink-0">
                         {av.nome.charAt(0)}
                       </div>
                       <div>
@@ -273,47 +240,47 @@ export default function Home() {
             
             <div className="flex flex-col gap-2">
               <label className="text-sm font-semibold text-zinc-600">Quartos</label>
-              <input type="range" min="1" max="5" value={quartos} onChange={(e) => setQuartos(Number(e.target.value))} className="w-full accent-blue-600" />
+              <input type="range" min="1" max="5" value={quartos} onChange={(e) => setQuartos(Number(e.target.value))} className="w-full accent-[#0F4C5C]" />
               <div className="flex justify-between text-xs text-zinc-400 font-medium">
                 <span>1</span><span>2</span><span>3</span><span>4</span><span>5+</span>
               </div>
-              <div className="text-center font-bold text-blue-600 mt-1">
+              <div className="text-center font-bold text-[#0F4C5C] mt-1">
                 {quartos} {quartos === 1 ? 'quarto' : 'quartos'}
               </div>
             </div>
 
             <div className="flex flex-col gap-2">
               <label className="text-sm font-semibold text-zinc-600">Banheiros</label>
-              <input type="range" min="1" max="5" value={banheiros} onChange={(e) => setBanheiros(Number(e.target.value))} className="w-full accent-blue-600" />
+              <input type="range" min="1" max="5" value={banheiros} onChange={(e) => setBanheiros(Number(e.target.value))} className="w-full accent-[#0F4C5C]" />
               <div className="flex justify-between text-xs text-zinc-400 font-medium">
                 <span>1</span><span>2</span><span>3</span><span>4</span><span>5+</span>
               </div>
-              <div className="text-center font-bold text-blue-600 mt-1">
+              <div className="text-center font-bold text-[#0F4C5C] mt-1">
                 {banheiros} {banheiros === 1 ? 'banheiro' : 'banheiros'}
               </div>
             </div>
 
             <div className="flex flex-col gap-2">
               <label className="text-sm font-semibold text-zinc-600">Metragem Aproximada (m²)</label>
-              <input type="range" min="30" max="300" step="10" value={metragem} onChange={(e) => setMetragem(Number(e.target.value))} className="w-full accent-blue-600" />
+              <input type="range" min="30" max="300" step="10" value={metragem} onChange={(e) => setMetragem(Number(e.target.value))} className="w-full accent-[#0F4C5C]" />
               <div className="flex justify-between text-xs text-zinc-400 font-medium">
                 <span>30</span><span>150</span><span>300+</span>
               </div>
-              <div className="text-center font-bold text-blue-600 mt-1">
+              <div className="text-center font-bold text-[#0F4C5C] mt-1">
                 {metragem} m²
               </div>
             </div>
 
             <div className="flex flex-col gap-2">
               <label className="text-sm font-semibold text-zinc-600">Tipo de Limpeza</label>
-              <select value={tipo} onChange={(e) => setTipo(e.target.value)} className="w-full p-3 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-800 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none">
+              <select value={tipo} onChange={(e) => setTipo(e.target.value)} className="w-full p-3 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-800 font-medium focus:ring-2 focus:ring-[#0F4C5C] focus:outline-none">
                 <option value="padrao">Padrão (Manutenção)</option>
                 <option value="pesada">Pesada (Com faxina de janelas e armários)</option>
                 <option value="pos-obra">Pós-Obra (Remoção de tinta, rejunte, etc)</option>
               </select>
             </div>
 
-            {/* NOVO: FREQUÊNCIA DO SERVIÇO */}
+            {/* FREQUÊNCIA DO SERVIÇO */}
             <div className="flex flex-col gap-2">
               <label className="text-sm font-semibold text-zinc-600">Frequência</label>
               <div className="grid grid-cols-2 gap-3">
@@ -322,7 +289,7 @@ export default function Home() {
                   onClick={() => setFrequencia('unico')}
                   className={`py-3 rounded-xl font-bold text-sm border transition-all ${
                     frequencia === 'unico' 
-                      ? 'bg-blue-600 text-white border-blue-600 shadow-md' 
+                      ? 'bg-[#0F4C5C] text-white border-[#0F4C5C] shadow-md' 
                       : 'bg-zinc-50 text-zinc-600 border-zinc-200 hover:bg-zinc-100'
                   }`}
                 >
@@ -333,12 +300,12 @@ export default function Home() {
                   onClick={() => setFrequencia('recorrente')}
                   className={`py-3 rounded-xl font-bold text-sm border transition-all relative ${
                     frequencia === 'recorrente' 
-                      ? 'bg-blue-600 text-white border-blue-600 shadow-md' 
+                      ? 'bg-[#0F4C5C] text-white border-[#0F4C5C] shadow-md' 
                       : 'bg-zinc-50 text-zinc-600 border-zinc-200 hover:bg-zinc-100'
                   }`}
                 >
                   Recorrente
-                  <span className="absolute -top-2 -right-2 bg-green-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold uppercase shadow">
+                  <span className="absolute -top-2 -right-2 bg-[#8CD3C4] text-white text-[10px] px-2 py-0.5 rounded-full font-bold uppercase shadow">
                     -10% Off
                   </span>
                 </button>
@@ -353,7 +320,7 @@ export default function Home() {
                   type="date" 
                   value={dataEspecifica} 
                   onChange={(e) => setDataEspecifica(e.target.value)}
-                  className="w-full p-3 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-800 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  className="w-full p-3 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-800 font-medium focus:ring-2 focus:ring-[#0F4C5C] focus:outline-none"
                 />
               </div>
             ) : (
@@ -363,7 +330,7 @@ export default function Home() {
                   <select 
                     value={frequenciaRecorrente} 
                     onChange={(e) => setFrequenciaRecorrente(e.target.value)}
-                    className="w-full p-3 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-800 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none text-sm"
+                    className="w-full p-3 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-800 font-medium focus:ring-2 focus:ring-[#0F4C5C] focus:outline-none text-sm"
                   >
                     <option value="semanal">Semanal</option>
                     <option value="quinzenal">Quinzenal</option>
@@ -375,7 +342,7 @@ export default function Home() {
                   <select 
                     value={diaSemana} 
                     onChange={(e) => setDiaSemana(e.target.value)}
-                    className="w-full p-3 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-800 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none text-sm"
+                    className="w-full p-3 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-800 font-medium focus:ring-2 focus:ring-[#0F4C5C] focus:outline-none text-sm"
                   >
                     <option value="segunda">Segunda-feira</option>
                     <option value="terca">Terça-feira</option>
@@ -394,13 +361,13 @@ export default function Home() {
               <div>
                 <span className="text-lg font-medium text-zinc-600 block">Estimativa:</span>
                 {frequencia === 'recorrente' && (
-                  <span className="text-xs text-green-600 font-bold">Inclui 10% de desconto recorrente</span>
+                  <span className="text-xs text-[#8CD3C4] font-bold">Inclui 10% de desconto recorrente</span>
                 )}
               </div>
               <span className="text-3xl md:text-4xl font-black text-zinc-900">R$ {precoFinal}</span>
             </div>
             
-            <a href={linkWhatsApp} target="_blank" rel="noopener noreferrer" className="bg-green-500 text-white w-full py-4 rounded-xl text-lg font-bold hover:bg-green-600 transition-colors shadow-lg hover:shadow-green-500/30 flex items-center justify-center gap-2 mt-2">
+            <a href={linkWhatsApp} target="_blank" rel="noopener noreferrer" className="bg-[#8CD3C4] text-white w-full py-4 rounded-xl text-lg font-bold hover:bg-[#8CD3C4] transition-colors shadow-lg hover:shadow-[#8CD3C4]/30 flex items-center justify-center gap-2 mt-2">
               Agendar pelo WhatsApp
             </a>
           </div>
