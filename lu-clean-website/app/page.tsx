@@ -69,7 +69,7 @@ export default function Home() {
   };
 
   const precoFinal = calcularPreco();
-  const numeroWhatsApp = "5561999999999"; 
+  const numeroWhatsApp = "556131426835"; 
 
   // Montagem da preferência de data/horário para a mensagem
   const detalheAgenda = frequencia === 'unico' 
