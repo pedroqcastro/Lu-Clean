@@ -11,10 +11,10 @@ export async function POST(request: Request) {
       metragem = 0, 
       valor_simulado = 0,
       evento_tipo = 'orcamento_clicado',
-      visitante_id = 'desconhecido'
+      visitante_id = 'desconhecido',
+      tempo_permanencia_segundos = 0
     } = body;
 
-    // Captura o dispositivo do usuário através dos headers da requisição
     const userAgent = request.headers.get('user-agent') || '';
     const dispositivo = /mobile/i.test(userAgent) ? 'Celular' : 'Computador';
 
@@ -25,12 +25,12 @@ export async function POST(request: Request) {
       INSERT INTO orcamentos_gerados (
         tipo_limpeza, quartos, banheiros, metragem, 
         valor_simulado, clicou_whatsapp, evento_tipo, 
-        visitante_id, dispositivo
+        visitante_id, dispositivo, tempo_permanencia_segundos
       )
       VALUES (
         ${tipo_limpeza}, ${quartos}, ${banheiros}, ${metragem}, 
         ${valor_simulado}, ${evento_tipo === 'orcamento_clicado'}, ${evento_tipo}, 
-        ${visitante_id}, ${dispositivo}
+        ${visitante_id}, ${dispositivo}, ${tempo_permanencia_segundos}
       )
     `;
 

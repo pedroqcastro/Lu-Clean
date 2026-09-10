@@ -19,16 +19,15 @@ const avaliacoesData = [
 ];
 
 export default function Home() {
-  // --- GERENCIAMENTO DE VISITANTE ÚNICO (UUID) & PAGE VIEW ---
+  // --- GERENCIAMENTO DE VISITANTE ÚNICO, PAGE VIEW & TEMPO DE PERMANÊNCIA ---
   useEffect(() => {
-    // Verifica se o usuário já tem um crachá salvo no navegador
     let visitorId = localStorage.getItem('luclean_visitor_id');
     if (!visitorId) {
       visitorId = 'user_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
       localStorage.setItem('luclean_visitor_id', visitorId);
     }
 
-    // Dispara o espião de Visita na Página (Page View) de forma única por sessão
+    // Registra a visita inicial
     const registrarVisita = async () => {
       try {
         await fetch('/api/registrar', {
@@ -45,6 +44,29 @@ export default function Home() {
     };
 
     registrarVisita();
+
+    // Cronômetro de tempo de permanência
+    const tempoInicio = Date.now();
+
+    const lidarComSaida = () => {
+      const segundosGastos = Math.round((Date.now() - tempoInicio) / 1000);
+      
+      if (segundosGastos > 1) {
+        const payload = JSON.stringify({
+          evento_tipo: 'tempo_permanencia',
+          visitante_id: visitorId,
+          tempo_permanencia_segundos: segundosGastos,
+        });
+        
+        navigator.sendBeacon('/api/registrar', payload);
+      }
+    };
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') {
+        lidarComSaida();
+      }
+    });
   }, []);
 
   // --- ESTADOS DO SIMULADOR ---
