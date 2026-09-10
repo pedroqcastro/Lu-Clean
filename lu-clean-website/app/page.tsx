@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 
 // --- DADOS PARA OS CARROSSÉIS ---
@@ -19,6 +19,34 @@ const avaliacoesData = [
 ];
 
 export default function Home() {
+  // --- GERENCIAMENTO DE VISITANTE ÚNICO (UUID) & PAGE VIEW ---
+  useEffect(() => {
+    // Verifica se o usuário já tem um crachá salvo no navegador
+    let visitorId = localStorage.getItem('luclean_visitor_id');
+    if (!visitorId) {
+      visitorId = 'user_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+      localStorage.setItem('luclean_visitor_id', visitorId);
+    }
+
+    // Dispara o espião de Visita na Página (Page View) de forma única por sessão
+    const registrarVisita = async () => {
+      try {
+        await fetch('/api/registrar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            evento_tipo: 'visita_pagina',
+            visitante_id: visitorId,
+          }),
+        });
+      } catch (err) {
+        console.error("Erro ao registrar visita", err);
+      }
+    };
+
+    registrarVisita();
+  }, []);
+
   // --- ESTADOS DO SIMULADOR ---
   const [quartos, setQuartos] = useState(1);
   const [banheiros, setBanheiros] = useState(1);
