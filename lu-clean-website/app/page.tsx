@@ -5,21 +5,9 @@ import useEmblaCarousel from 'embla-carousel-react';
 
 // --- DADOS PARA OS CARROSSÉIS ---
 const comparacoesData = [
-  {
-    id: 1,
-    imagem: "/sala-pos-obra.jpg",
-    titulo: "Sala Pós-Obra"
-  },
-  {
-    id: 2,
-    imagem: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800",
-    titulo: "Cozinha Pesada"
-  },
-  {
-    id: 3,
-    imagem: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800",
-    titulo: "Quarto e Janelas"
-  }
+  { id: 1, imagem: "/sala-pos-obra.jpg", titulo: "Sala Pós-Obra" },
+  { id: 2, imagem: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800", titulo: "Cozinha Pesada" },
+  { id: 3, imagem: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800", titulo: "Quarto e Janelas" }
 ];
 
 const avaliacoesData = [
@@ -76,9 +64,13 @@ export default function Home() {
     ? `Data preferencial: ${dataEspecifica || 'A definir'}` 
     : `Plano Recorrente: ${frequenciaRecorrente} (preferência às ${diaSemana}s)`;
 
+  // Mensagem Padrão (Simulador)
   const mensagem = `Olá, vim pelo site! Gostaria de agendar uma limpeza ${tipo.replace('-', ' ')} (${frequencia === 'unico' ? 'Pontual' : 'Recorrente'}). Imóvel: ${metragem}m², ${quartos} quarto(s), ${banheiros} banheiro(s). ${detalheAgenda}. Estimativa: R$ ${precoFinal}. Podemos confirmar?`;
-  
   const linkWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensagem)}`;
+
+  // Mensagem Genérica (Cabeçalho)
+  const mensagemGenerica = `Olá! Vim pelo site da LU CLEAN e gostaria de tirar algumas dúvidas sobre os serviços de limpeza.`;
+  const linkWhatsAppGenerico = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensagemGenerica)}`;
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
@@ -115,31 +107,41 @@ export default function Home() {
       <header className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md z-50 border-b border-zinc-200 shadow-sm">
         <div className="flex items-center justify-between p-4 md:p-6 max-w-7xl mx-auto w-full">
             <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="flex items-center hover:opacity-80 transition-opacity">
-              <img 
-                src="/logo.png" 
-                alt="Logo LU CLEAN" 
-                className="h-18 md:h-24 w-auto drop-shadow-sm rounded-full"
-              />
+              <img src="/logo.png" alt="Logo LU CLEAN" className="h-18 md:h-24 w-auto drop-shadow-sm rounded-full" />
             </a>
             <nav className="hidden md:flex gap-6 text-sm font-medium text-zinc-600">
               <a href="#resultados" onClick={handleScroll} className="hover:text-[#0F4C5C] transition-colors">Resultados</a>
               <a href="#avaliacoes" onClick={handleScroll} className="hover:text-[#0F4C5C] transition-colors">Avaliações</a>
               <a href="#simulador" onClick={handleScroll} className="hover:text-[#0F4C5C] transition-colors">Simulador</a>
             </nav>
-            <a href={linkWhatsApp} target="_blank" rel="noopener noreferrer" className="bg-[#0F4C5C] text-white px-4 py-2 md:px-5 md:py-2.5 rounded-full text-xs md:text-sm font-semibold hover:bg-[#0F4C5C] transition-colors shadow-md">
+
+            {/* ESPIÃO DO CABEÇALHO (Contato Direto) */}
+            <button 
+              onClick={() => {
+                fetch('/api/registrar', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    tipo_limpeza: 'contato_direto_cabecalho',
+                    quartos: 0,
+                    banheiros: 0,
+                    metragem: 0,
+                    valor_simulado: 0,
+                  }),
+                }).catch(err => console.error("Erro no tracker:", err));
+                window.open(linkWhatsAppGenerico, '_blank');
+              }}
+              className="bg-[#0F4C5C] text-white px-4 py-2 md:px-5 md:py-2.5 rounded-full text-xs md:text-sm font-semibold hover:bg-[#0B3A46] transition-colors shadow-md cursor-pointer"
+            >
               Falar no WhatsApp
-            </a>
+            </button>
         </div>
       </header>
 
       {/* HERO SECTION */}
       <main className="relative flex flex-col items-center text-center pt-32 md:pt-48 pb-20 md:pb-32 w-full mt-[72px] md:mt-[88px] overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1920&q=80" 
-            alt="Ambiente Limpo" 
-            className="w-full h-full object-cover"
-          />
+          <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1920&q=80" alt="Ambiente Limpo" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-zinc-50/85 backdrop-blur-[2px]"></div>
         </div>
 
@@ -154,7 +156,8 @@ export default function Home() {
             Especialistas em limpeza residencial, comercial e pós-obra. Deslize para ver nossos resultados e simule seu orçamento online.
           </p>
           
-          <a href="#simulador" onClick={handleScroll} className="bg-[#0F4C5C] text-white px-8 py-4 rounded-full text-lg font-bold hover:bg-[#0F4C5C] transition-all shadow-lg hover:shadow-[#0F4C5C]/30">
+          {/* BOTÃO DA HERO (Apenas rola a tela para o simulador) */}
+          <a href="#simulador" onClick={handleScroll} className="bg-[#0F4C5C] text-white px-8 py-4 rounded-full text-lg font-bold hover:bg-[#0B3A46] transition-all shadow-lg hover:shadow-[#0F4C5C]/30">
             Simular Orçamento
           </a>
         </div>
@@ -177,13 +180,7 @@ export default function Home() {
               {comparacoesData.map((item) => (
                 <div key={item.id} className="flex-[0_0_90%] md:flex-[0_0_70%] min-w-0 px-3 md:px-4">
                   <div className="w-full aspect-[4/3] md:aspect-[16/9] rounded-3xl overflow-hidden shadow-xl border-4 border-white ring-1 ring-zinc-200 relative group">
-                    
-                    <img 
-                      src={item.imagem} 
-                      alt={item.titulo} 
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-
+                    <img src={item.imagem} alt={item.titulo} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                     <div className="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur px-4 py-1.5 text-xs font-bold rounded-full text-zinc-900 shadow-md">
                       {item.titulo}
                     </div>
@@ -244,9 +241,7 @@ export default function Home() {
               <div className="flex justify-between text-xs text-zinc-400 font-medium">
                 <span>1</span><span>2</span><span>3</span><span>4</span><span>5+</span>
               </div>
-              <div className="text-center font-bold text-[#0F4C5C] mt-1">
-                {quartos} {quartos === 1 ? 'quarto' : 'quartos'}
-              </div>
+              <div className="text-center font-bold text-[#0F4C5C] mt-1">{quartos} {quartos === 1 ? 'quarto' : 'quartos'}</div>
             </div>
 
             <div className="flex flex-col gap-2">
@@ -255,9 +250,7 @@ export default function Home() {
               <div className="flex justify-between text-xs text-zinc-400 font-medium">
                 <span>1</span><span>2</span><span>3</span><span>4</span><span>5+</span>
               </div>
-              <div className="text-center font-bold text-[#0F4C5C] mt-1">
-                {banheiros} {banheiros === 1 ? 'banheiro' : 'banheiros'}
-              </div>
+              <div className="text-center font-bold text-[#0F4C5C] mt-1">{banheiros} {banheiros === 1 ? 'banheiro' : 'banheiros'}</div>
             </div>
 
             <div className="flex flex-col gap-2">
@@ -266,9 +259,7 @@ export default function Home() {
               <div className="flex justify-between text-xs text-zinc-400 font-medium">
                 <span>30</span><span>150</span><span>300+</span>
               </div>
-              <div className="text-center font-bold text-[#0F4C5C] mt-1">
-                {metragem} m²
-              </div>
+              <div className="text-center font-bold text-[#0F4C5C] mt-1">{metragem} m²</div>
             </div>
 
             <div className="flex flex-col gap-2">
@@ -288,9 +279,7 @@ export default function Home() {
                   type="button"
                   onClick={() => setFrequencia('unico')}
                   className={`py-3 rounded-xl font-bold text-sm border transition-all ${
-                    frequencia === 'unico' 
-                      ? 'bg-[#0F4C5C] text-white border-[#0F4C5C] shadow-md' 
-                      : 'bg-zinc-50 text-zinc-600 border-zinc-200 hover:bg-zinc-100'
+                    frequencia === 'unico' ? 'bg-[#0F4C5C] text-white border-[#0F4C5C] shadow-md' : 'bg-zinc-50 text-zinc-600 border-zinc-200 hover:bg-zinc-100'
                   }`}
                 >
                   Único (Pontual)
@@ -299,9 +288,7 @@ export default function Home() {
                   type="button"
                   onClick={() => setFrequencia('recorrente')}
                   className={`py-3 rounded-xl font-bold text-sm border transition-all relative ${
-                    frequencia === 'recorrente' 
-                      ? 'bg-[#0F4C5C] text-white border-[#0F4C5C] shadow-md' 
-                      : 'bg-zinc-50 text-zinc-600 border-zinc-200 hover:bg-zinc-100'
+                    frequencia === 'recorrente' ? 'bg-[#0F4C5C] text-white border-[#0F4C5C] shadow-md' : 'bg-zinc-50 text-zinc-600 border-zinc-200 hover:bg-zinc-100'
                   }`}
                 >
                   Recorrente
@@ -316,22 +303,13 @@ export default function Home() {
             {frequencia === 'unico' ? (
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-semibold text-zinc-600">Data Preferencial</label>
-                <input 
-                  type="date" 
-                  value={dataEspecifica} 
-                  onChange={(e) => setDataEspecifica(e.target.value)}
-                  className="w-full p-3 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-800 font-medium focus:ring-2 focus:ring-[#0F4C5C] focus:outline-none"
-                />
+                <input type="date" value={dataEspecifica} onChange={(e) => setDataEspecifica(e.target.value)} className="w-full p-3 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-800 font-medium focus:ring-2 focus:ring-[#0F4C5C] focus:outline-none" />
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-2">
                   <label className="text-sm font-semibold text-zinc-600">Plano</label>
-                  <select 
-                    value={frequenciaRecorrente} 
-                    onChange={(e) => setFrequenciaRecorrente(e.target.value)}
-                    className="w-full p-3 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-800 font-medium focus:ring-2 focus:ring-[#0F4C5C] focus:outline-none text-sm"
-                  >
+                  <select value={frequenciaRecorrente} onChange={(e) => setFrequenciaRecorrente(e.target.value)} className="w-full p-3 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-800 font-medium focus:ring-2 focus:ring-[#0F4C5C] focus:outline-none text-sm">
                     <option value="semanal">Semanal</option>
                     <option value="quinzenal">Quinzenal</option>
                     <option value="mensal">Mensal</option>
@@ -339,11 +317,7 @@ export default function Home() {
                 </div>
                 <div className="flex flex-col gap-2">
                   <label className="text-sm font-semibold text-zinc-600">Dia Preferido</label>
-                  <select 
-                    value={diaSemana} 
-                    onChange={(e) => setDiaSemana(e.target.value)}
-                    className="w-full p-3 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-800 font-medium focus:ring-2 focus:ring-[#0F4C5C] focus:outline-none text-sm"
-                  >
+                  <select value={diaSemana} onChange={(e) => setDiaSemana(e.target.value)} className="w-full p-3 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-800 font-medium focus:ring-2 focus:ring-[#0F4C5C] focus:outline-none text-sm">
                     <option value="segunda">Segunda-feira</option>
                     <option value="terca">Terça-feira</option>
                     <option value="quarta">Quarta-feira</option>
@@ -367,9 +341,30 @@ export default function Home() {
               <span className="text-3xl md:text-4xl font-black text-zinc-900">R$ {precoFinal}</span>
             </div>
             
-            <a href={linkWhatsApp} target="_blank" rel="noopener noreferrer" className="bg-[#8CD3C4] text-white w-full py-4 rounded-xl text-lg font-bold hover:bg-[#8CD3C4] transition-colors shadow-lg hover:shadow-[#8CD3C4]/30 flex items-center justify-center gap-2 mt-2">
+            {/* ESPIÃO DO SIMULADOR (Conversão Qualificada) */}
+            <button 
+              onClick={async () => {
+                try {
+                  await fetch('/api/registrar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      tipo_limpeza: tipo,
+                      quartos: quartos,
+                      banheiros: banheiros,
+                      metragem: metragem,
+                      valor_simulado: precoFinal,
+                    }),
+                  });
+                } catch (err) {
+                  console.error("Falha ao registrar métrica", err);
+                }
+                window.open(linkWhatsApp, '_blank');
+              }}
+              className="bg-[#8CD3C4] text-zinc-900 w-full py-4 rounded-xl text-lg font-bold hover:bg-[#6EBAA9] transition-colors shadow-lg hover:shadow-[#8CD3C4]/30 flex items-center justify-center gap-2 mt-2 cursor-pointer"
+            >
               Agendar pelo WhatsApp
-            </a>
+            </button>
           </div>
         </div>
       </section>
