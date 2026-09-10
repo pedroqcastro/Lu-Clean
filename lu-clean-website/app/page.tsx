@@ -19,8 +19,58 @@ const avaliacoesData = [
 ];
 
 export default function Home() {
+  // --- ESTADO PARA CONTROLAR SE O USUÁRIO JÁ INTERAGIU COM O SIMULADOR ---
+  const [jaInteragiuSimulador, setJaInteragiuSimulador] = useState(false);
+
+  const dispararLeadSimulador = () => {
+    if (jaInteragiuSimulador) return;
+    setJaInteragiuSimulador(true);
+
+    const visitorId = localStorage.getItem('luclean_visitor_id') || 'desconhecido';
+
+    fetch('/api/registrar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        evento_tipo: 'simulador_interagido',
+        visitante_id: visitorId,
+        tipo_limpeza: tipo,
+        quartos: quartos,
+        banheiros: banheiros,
+        metragem: metragem,
+        valor_simulado: precoFinal,
+      }),
+    }).catch(err => console.error("Erro ao registrar lead do simulador:", err));
+  };
+
   // --- GERENCIAMENTO DE VISITANTE ÚNICO, PAGE VIEW & TEMPO DE PERMANÊNCIA ---
   useEffect(() => {
+    // --- ESPIÃO DE PROFUNDIDADE DE ROLAGEM (SCROLL DEPTH) ---
+    const marcosDisparados = { 25: false, 50: false, 75: false, 100: false };
+
+    const lidarComScroll = () => {
+      const alturaJanela = window.innerHeight;
+      const alturaTotalDoc = document.documentElement.scrollHeight - alturaJanela;
+      const scrollTop = window.scrollY;
+      const porcentagemScroll = Math.round((scrollTop / alturaTotalDoc) * 100);
+
+      [25, 50, 75, 100].forEach((marco) => {
+        if (porcentagemScroll >= marco && !marcosDisparados[marco as keyof typeof marcosDisparados]) {
+          marcosDisparados[marco as keyof typeof marcosDisparados] = true;
+
+          const visitorId = localStorage.getItem('luclean_visitor_id') || 'desconhecido';
+
+          // Usa sendBeacon para garantir o envio sem atrasar a página
+          navigator.sendBeacon('/api/registrar', JSON.stringify({
+            evento_tipo: `scroll_${marco}`,
+            visitante_id: visitorId,
+          }));
+        }
+      });
+    };
+
+    window.addEventListener('scroll', lidarComScroll, { passive: true });
+
     let visitorId = localStorage.getItem('luclean_visitor_id');
     if (!visitorId) {
       visitorId = 'user_' + Math.random().toString(36).substring(2) + Date.now().toString(36);

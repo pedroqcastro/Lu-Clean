@@ -12,7 +12,10 @@ export async function POST(request: Request) {
       valor_simulado = 0,
       evento_tipo = 'orcamento_clicado',
       visitante_id = 'desconhecido',
-      tempo_permanencia_segundos = 0
+      tempo_permanencia_segundos = 0,
+      utm_source = 'direto',
+      utm_medium = 'nenhum',
+      utm_campaign = 'nenhuma'
     } = body;
 
     const userAgent = request.headers.get('user-agent') || '';
@@ -25,12 +28,14 @@ export async function POST(request: Request) {
       INSERT INTO orcamentos_gerados (
         tipo_limpeza, quartos, banheiros, metragem, 
         valor_simulado, clicou_whatsapp, evento_tipo, 
-        visitante_id, dispositivo, tempo_permanencia_segundos
+        visitante_id, dispositivo, tempo_permanencia_segundos,
+        utm_source, utm_medium, utm_campaign
       )
       VALUES (
         ${tipo_limpeza}, ${quartos}, ${banheiros}, ${metragem}, 
         ${valor_simulado}, ${evento_tipo === 'orcamento_clicado'}, ${evento_tipo}, 
-        ${visitante_id}, ${dispositivo}, ${tempo_permanencia_segundos}
+        ${visitante_id}, ${dispositivo}, ${tempo_permanencia_segundos},
+        ${utm_source}, ${utm_medium}, ${utm_campaign}
       )
     `;
 
